@@ -4,21 +4,6 @@ description: >-
   Browser automation skills for LLMs. 33 atomic Playwright-based browser
   operations (navigate, click, fill, screenshot, extract text, login, start game, etc.).
   Background script manages browser sessions; agent invokes via bash.
-version: "0.1.0"
-metadata:
-  openclaw:
-    requires:
-      bins: ["node"]
-env: []
-tools:
-  - node: Required. Runs browser scripts.
-files:
-  read:
-    - references/: Prompt templates
-    - dist/: Compiled JavaScript
-  write:
-    - /tmp/genshin-skills.sock: Unix domain socket for IPC
-    - /tmp/genshin-skills.json: Process state (PID, socket path)
 ---
 
 # Genshin-Skills
