@@ -8,14 +8,14 @@
 
 ```bash
 cd <SKILL_DIR>
-pnpm install
+npm install
 npx playwright install chromium
-pnpm build
+npm run build
 ```
 
-- `pnpm install`：安装 Node.js 依赖
+- `npm install`：安装 Node.js 依赖
 - `npx playwright install chromium`：下载 Chromium 浏览器（Playwright 需要）
-- `pnpm build`：编译 TypeScript 到 `dist/`，后续所有脚本都从 `dist/` 运行
+- `npm run build`：编译 TypeScript 到 `dist/`，后续所有脚本都从 `dist/` 运行
 
 ### 2. 启动浏览器后台进程
 
