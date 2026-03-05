@@ -1,8 +1,11 @@
 ---
 name: genshin-skills
 description: >-
-  Browser automation skills for LLMs. 33 atomic Playwright-based browser
-  operations (navigate, click, fill, screenshot, extract text, login, start game, etc.).
+  Browser automation via Playwright for LLMs. Use when you need to:
+  (1) automate web interactions (click, fill, navigate, screenshot),
+  (2) extract page content or run JavaScript,
+  (3) manage cookies or browser sessions,
+  (4) log in to Genshin Impact cloud gaming and claim daily rewards.
   Background script manages browser sessions; agent invokes via bash.
 ---
 
@@ -11,6 +14,8 @@ description: >-
 Browser automation skills for LLMs — 33 atomic Playwright-based browser operations.
 
 ## Quick Start
+
+`<SKILL_DIR>` is the skill's install directory, available as the `SKILL_DIR` environment variable at runtime.
 
 ```bash
 # Install
@@ -124,18 +129,7 @@ The `run-skill.js` script connects to the socket, sends commands, and prints JSO
 - **Session isolation**: Each session has its own browser context with separate cookies and storage.
 - **Idle cleanup**: Sessions are automatically closed after 30 minutes of inactivity.
 
-## Development
+## References
 
-```bash
-pnpm build          # compile TypeScript
-pnpm typecheck      # type-check without emitting
-pnpm test           # run all tests
-pnpm test:unit      # unit tests only
-pnpm test:coverage  # with coverage report
-pnpm lint           # check formatting
-pnpm format         # auto-format
-```
-
-## License
-
-MIT
+- **Agent prompt**: See [references/browser-prompt.md](references/browser-prompt.md) for full skill reference with detailed parameters and examples
+- **Welkin Moon workflow**: See [references/bootstrap.md](references/bootstrap.md) for step-by-step Genshin daily reward claim
