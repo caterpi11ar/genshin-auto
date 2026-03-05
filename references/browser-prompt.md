@@ -69,6 +69,8 @@ node <SKILL_DIR>/dist/scripts/stop-browser.js
 | `browser_session_create` | `[--browser chromium\|firefox\|webkit] [--headless] [--user-agent "..."]` | `run-skill.js browser_session_create --browser firefox` |
 | `browser_session_list` | _(none)_ | `run-skill.js browser_session_list` |
 | `browser_session_close` | `[--session-id ID]` | `run-skill.js browser_session_close` |
+| `browser_login` | `[--loginSuccessSelector SEL] [--timeoutMs MS] [--pollIntervalMs MS]` | `run-skill.js browser_login` |
+| `browser_start_game` | `[--session-id ID] [--startSelector SEL] [--dismissSelectors '["sel1"]'] [--gameLoadedSelector SEL]` | `run-skill.js browser_start_game --dismissSelectors '[".guide-close-btn"]'` |
 
 ### Navigation
 
@@ -85,7 +87,7 @@ node <SKILL_DIR>/dist/scripts/stop-browser.js
 
 | Skill | Args | Example |
 |-------|------|---------|
-| `browser_click` | `--selector SEL [--button left\|right\|middle] [--click-count N] [--timeout MS]` | `run-skill.js browser_click --selector "#btn"` |
+| `browser_click` | `--selector SEL [--button left\|right\|middle] [--click-count N] [--timeout MS]` or `--x N --y N [--button] [--click-count N]` | `run-skill.js browser_click --selector "#btn"` or `run-skill.js browser_click --x 640 --y 360` |
 | `browser_fill` | `--selector SEL --value TEXT [--timeout MS]` | `run-skill.js browser_fill --selector "#name" --value "Alice"` |
 | `browser_type` | `--selector SEL --text TEXT [--delay MS] [--timeout MS]` | `run-skill.js browser_type --selector "#search" --text "hello"` |
 | `browser_hover` | `--selector SEL [--timeout MS]` | `run-skill.js browser_hover --selector ".menu-item"` |
