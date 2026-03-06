@@ -52,7 +52,7 @@ export const appConfigSchema = z.object({
         "expedition-collect",
         "battle-pass-claim",
       ]),
-      skillsDirs: z.array(z.string()).default(["./skills", PATHS.skillsDir]),
+      skillsDirs: z.array(z.string()).default([PATHS.builtinSkillsDir, "./skills", PATHS.skillsDir]),
     })
     .default({}),
 

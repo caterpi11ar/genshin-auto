@@ -1,6 +1,9 @@
-import { join } from "node:path";
+import { join, resolve as resolvePath, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { mkdir, writeFile, access } from "node:fs/promises";
 import { homedir } from "node:os";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const DIR_NAME = ".giclaw";
 
@@ -13,12 +16,15 @@ export interface StatePaths {
   transcriptsDir: string;
   screenshotDir: string;
   skillsDir: string;
+  builtinSkillsDir: string;
 }
 
 function resolve(): StatePaths {
   const home = process.env["GICLAW_HOME"] ?? process.env["HOME"] ?? process.env["USERPROFILE"] ?? homedir();
   const stateDir = process.env["GICLAW_STATE_DIR"] ?? join(home, DIR_NAME);
   const dataDir = join(stateDir, "data");
+  // dist/config/ → package root
+  const packageRoot = resolvePath(__dirname, "..", "..");
 
   return {
     stateDir,
@@ -29,6 +35,7 @@ function resolve(): StatePaths {
     transcriptsDir: join(dataDir, "transcripts"),
     screenshotDir: join(dataDir, "screenshots"),
     skillsDir: join(stateDir, "skills"),
+    builtinSkillsDir: join(packageRoot, "skills"),
   };
 }
 

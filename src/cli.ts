@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name("giclaw")
   .description("AI agent for Genshin Impact cloud gaming")
-  .version("0.2.0")
+  .version("0.2.1")
   .option("-c, --config <path>", "config file path")
   .option("-t, --tasks <ids...>", "task IDs to run")
   .option("--headless", "force headless mode")
