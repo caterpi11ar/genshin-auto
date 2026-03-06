@@ -20,7 +20,9 @@ export class SkillRegistry {
   }
 
   toTaskDefinitions(): TaskDefinition[] {
-    return this.skills.map((skill) => ({
+    return this.skills
+      .filter((skill) => skill.enabled)
+      .map((skill) => ({
       id: skill.id,
       name: skill.name,
       description: skill.description,

@@ -37,12 +37,12 @@ export class TaskRunner extends EventEmitter {
     const results: TaskResult[] = [];
     const startedAt = new Date();
 
-    logger.info(`Starting task run: ${enabled.length} task(s) enabled`);
+    logger.info(`▶ Starting task run: ${enabled.length} task(s) enabled`);
 
     for (let i = 0; i < enabled.length; i++) {
       const task = enabled[i]!;
       this.emit("task:index", { taskIndex: i + 1, taskTotal: enabled.length, taskId: task.id });
-      logger.info(`[${task.id}] Starting (Task ${i + 1}/${enabled.length}): ${task.name}`);
+      logger.info(`⏳ [${task.id}] Starting (Task ${i + 1}/${enabled.length}): ${task.name}`);
       const result = await this.runSingle(task, { ...ctx, logger });
       results.push(result);
     }
@@ -51,8 +51,11 @@ export class TaskRunner extends EventEmitter {
     const runResult: RunResult = { results, startedAt, completedAt };
 
     this.emit("run:complete", runResult);
+    const passed = results.filter((r) => r.success).length;
+    const total = results.length;
+    const icon = passed === total ? "🎉" : "⚠️";
     logger.info(
-      `Task run complete: ${results.filter((r) => r.success).length}/${results.length} succeeded`,
+      `${icon} Task run complete: ${passed}/${total} succeeded`,
     );
 
     return runResult;
@@ -93,7 +96,7 @@ export class TaskRunner extends EventEmitter {
           retries,
           delayMs: 2000,
           onRetry: (attempt) => {
-            logger.warn(`[${task.id}] Retry attempt ${attempt}`);
+            logger.warn(`🔄 [${task.id}] Retry attempt ${attempt}`);
           },
         });
       } else {
@@ -101,7 +104,11 @@ export class TaskRunner extends EventEmitter {
       }
 
       this.emit("task:complete", result);
-      logger.info(`[${task.id}] Completed: ${result.message}`);
+      if (result.success) {
+        logger.info(`✅ [${task.id}] Completed: ${result.message}`);
+      } else {
+        logger.error(`❌ [${task.id}] Failed: ${result.message}`);
+      }
       return result;
     } catch (err) {
       const durationMs = Date.now() - start;
@@ -116,7 +123,7 @@ export class TaskRunner extends EventEmitter {
       };
 
       this.emit("task:complete", result);
-      logger.error(`[${task.id}] Failed: ${error.message}`);
+      logger.error(`❌ [${task.id}] Failed: ${error.message}`);
       return result;
     }
   }

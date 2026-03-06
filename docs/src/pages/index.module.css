@@ -1,23 +1,553 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
-
-.heroBanner {
-  padding: 4rem 0;
-  text-align: center;
+/* ===========================
+   Page Wrapper — unified dark bg
+   =========================== */
+.pageWrapper {
   position: relative;
   overflow: hidden;
+  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
 }
 
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
+/* ===========================
+   Background Effects
+   =========================== */
+.bgGrid {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(198, 146, 58, 0.03);
+  background-image:
+    linear-gradient(rgba(198, 146, 58, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(198, 146, 58, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridMove 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.buttons {
+.bgBlob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: glowFloat 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+.bgBlob1 {
+  width: 700px;
+  height: 700px;
+  top: 5%;
+  left: -5%;
+  background: radial-gradient(circle, rgba(198, 146, 58, 0.25) 0%, transparent 70%);
+  filter: blur(80px);
+}
+
+.bgBlob2 {
+  width: 600px;
+  height: 600px;
+  top: 45%;
+  right: -5%;
+  background: radial-gradient(circle, rgba(232, 197, 71, 0.2) 0%, transparent 70%);
+  filter: blur(80px);
+  animation-delay: 2s;
+}
+
+.bgBlob3 {
+  width: 550px;
+  height: 550px;
+  bottom: -5%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(217, 182, 115, 0.18) 0%, transparent 70%);
+  filter: blur(80px);
+  animation-delay: 4s;
+}
+
+/* ===========================
+   Hero Section
+   =========================== */
+.hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 6rem 2rem 5rem;
+}
+
+.heroInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.heroBadge {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: rgba(232, 197, 71, 0.9);
+  border: 1px solid rgba(232, 197, 71, 0.2);
+  background: rgba(232, 197, 71, 0.06);
+  margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+  font-size: 6rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(120deg, #e8c547 30%, #c6923a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 3rem;
+  line-height: 1.8;
+  max-width: 520px;
+}
+
+.heroButtons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.heroHighlights {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.highlight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.highlightIcon {
+  font-size: 1.1rem;
+}
+
+.highlightText {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #1a1a2e;
+  background: linear-gradient(135deg, #e8c547, #c6923a);
+  transition: all 0.2s ease;
+}
+
+.primaryButton:hover {
+  color: #1a1a2e;
+  text-decoration: none;
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.secondaryButton:hover {
+  color: #fff;
+  text-decoration: none;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/* Hero Right: Logo Visual */
+.heroVisual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoContainer {
+  position: relative;
+  width: 410px;
+  height: 410px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+  animation: logoFloat 6s ease-in-out infinite, logoGlow 3s ease-in-out infinite;
+}
+
+.energyRing {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ring1 {
+  width: 250px;
+  height: 250px;
+  border-color: rgba(198, 146, 58, 0.3);
+  animation: ringPulse 4s ease-in-out infinite;
+}
+
+.ring2 {
+  width: 330px;
+  height: 330px;
+  border-color: rgba(232, 197, 71, 0.2);
+  animation: ringPulse 4s ease-in-out infinite 0.8s;
+}
+
+.ring3 {
+  width: 410px;
+  height: 410px;
+  border-color: rgba(217, 182, 115, 0.12);
+  animation: ringPulse 4s ease-in-out infinite 1.6s;
+}
+
+/* ===========================
+   Features Section (v0 IRL style)
+   =========================== */
+.features {
+  position: relative;
+  z-index: 1;
+  padding: 5rem 1.5rem;
+}
+
+.featuresInner {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 3.5rem;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.02em;
+}
+
+/* Single card container with internal divisions */
+.featuresCard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+}
+
+.featureCell {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.3s ease;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.featureCell:last-child {
+  border-right: none;
+}
+
+.featureCell:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Grid decorator — from v0 IRL CardDecorator */
+.featureDecorator {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.25rem;
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 65%);
+  mask-image: radial-gradient(circle at center, black 40%, transparent 65%);
+}
+
+.decoratorGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.5;
+}
+
+.featureCell:hover .decoratorGrid {
+  opacity: 0.8;
+}
+
+.decoratorIcon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-size: 1.75rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(22, 33, 62, 0.8);
+}
+
+.featureTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.featureDescription {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ===========================
+   CTA Section (v0 IRL style)
+   =========================== */
+.cta {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 1.5rem 5rem;
+}
+
+.ctaBox {
+  max-width: 960px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+}
+
+.ctaTitle {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.ctaDescription {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+}
+
+.ctaButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.ctaOutlineButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.ctaOutlineButton:hover {
+  color: #fff;
+  text-decoration: none;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===========================
+   Keyframe Animations
+   =========================== */
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 20px rgba(198, 146, 58, 0.3)); }
+  50% { filter: drop-shadow(0 0 40px rgba(232, 197, 71, 0.6)); }
+}
+
+@keyframes ringPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.6; }
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+
+@keyframes glowFloat {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(30px, -20px); }
+  66% { transform: translate(-20px, 15px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+@media screen and (max-width: 1024px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    text-align: center;
+  }
+
+  .heroContent {
+    align-items: center;
+    order: 2;
+  }
+
+  .heroVisual {
+    order: 1;
+  }
+
+  .heroTitle {
+    font-size: 4.5rem;
+  }
+
+  .heroButtons {
+    justify-content: center;
+  }
+
+  .featuresCard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .featureCell {
+    border-right: none;
+  }
+
+  .featureCell:nth-child(odd) {
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .featureCell:nth-child(-n+2) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .hero {
+    padding: 3rem 1.5rem;
+  }
+
+  .heroTitle {
+    font-size: 3rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .logoContainer {
+    width: 280px;
+    height: 280px;
+  }
+
+  .logo {
+    width: 200px;
+    height: 200px;
+  }
+
+  .ring1 { width: 180px; height: 180px; }
+  .ring2 { width: 230px; height: 230px; }
+  .ring3 { width: 280px; height: 280px; }
+
+  .sectionTitle {
+    font-size: 1.75rem;
+  }
+
+  .featuresCard {
+    grid-template-columns: 1fr;
+  }
+
+  .featureCell {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .featureCell:last-child {
+    border-bottom: none;
+  }
+
+  .ctaTitle {
+    font-size: 1.75rem;
+  }
+
+  .ctaBox {
+    padding: 3rem 1.5rem;
+  }
+}
+
+/* ===========================
+   Reduced Motion
+   =========================== */
+@media (prefers-reduced-motion: reduce) {
+  .logo { animation: none; }
+  .ring1, .ring2, .ring3 { animation: none; }
+  .bgGrid { animation: none; }
+  .bgBlob { animation: none; }
+  .featureCell { animation: none; }
 }

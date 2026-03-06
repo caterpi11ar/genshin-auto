@@ -5,6 +5,7 @@ import { Gateway } from "./gateway/gateway.js";
 import { startGateway } from "./gateway/lifecycle.js";
 import { logger } from "./utils/logger.js";
 import type { ProgressEvent } from "./utils/progress.js";
+import ora from "ora";
 
 const program = new Command();
 
@@ -155,34 +156,36 @@ async function runOnce(opts: Record<string, unknown>): Promise<void> {
       return `${min}m ${s.toString().padStart(2, "0")}s`;
     };
 
+    const spinner = ora({ stream: process.stderr }).start("Starting...");
+
     const onProgress = (event: ProgressEvent) => {
-      let line = `[${formatElapsed(event.elapsed)}]`;
+      let text = `[${formatElapsed(event.elapsed)}]`;
       if (event.phase === "login") {
-        line += " Logging in...";
+        text += " Logging in...";
       } else if (event.phase === "running") {
         if (event.taskTotal > 0) {
-          line += ` Task ${event.taskIndex}/${event.taskTotal}: ${event.taskId ?? ""}`;
+          text += ` Task ${event.taskIndex}/${event.taskTotal}: ${event.taskId ?? ""}`;
         }
         if (event.step > 0) {
-          line += ` | Step ${event.step}: ${event.action ?? ""}`;
+          text += ` | Step ${event.step}: ${event.action ?? ""}`;
         }
         if (event.reason) {
-          line += ` — "${event.reason}"`;
+          text += ` — "${event.reason}"`;
         }
       } else if (event.phase === "done") {
-        line += " Done";
+        text += " Done";
       } else if (event.phase === "error") {
-        line += ` Error: ${event.reason ?? "unknown"}`;
+        text += ` Error: ${event.reason ?? "unknown"}`;
       }
-      process.stderr.write(`\r\x1b[K${line}`);
+      spinner.text = text;
     };
 
     logger.on("progress", onProgress);
-    logger.mute(); // Suppress stderr logs so progress line is clean
+    logger.mute();
     progressCleanup = () => {
       logger.off("progress", onProgress);
       logger.unmute();
-      process.stderr.write("\r\x1b[K");
+      spinner.stop();
     };
   }
 

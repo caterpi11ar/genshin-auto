@@ -192,6 +192,7 @@ export class Gateway implements IGateway {
       const model = new VisionModel({
         ...this.config.model,
         viewport: this.config.browser.viewport,
+        locale: this.config.locale,
       });
       const enabledIds = taskIds ?? this.config.tasks.enabled;
 

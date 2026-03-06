@@ -39,14 +39,8 @@ export class VisionModel implements IVisionModel {
     this.config = config;
   }
 
-  /** Whether the model returns coordinates on a 1000×1000 normalized grid. */
-  private get usesNormalizedCoords(): boolean {
-    return this.config.family === "gemini";
-  }
-
-  /** Convert model coordinates to viewport pixels. */
+  /** Convert model coordinates (0-999 normalized) to viewport pixels. */
   private toPixel(x: number, y: number): { x: number; y: number } {
-    if (!this.usesNormalizedCoords) return { x, y };
     const vw = this.config.viewport?.width ?? 1280;
     const vh = this.config.viewport?.height ?? 720;
     return {
@@ -132,7 +126,7 @@ export class VisionModel implements IVisionModel {
     imageBase64: string,
     goal: string,
   ): Promise<Coordinates | null> {
-    const prompt = findCoordinatesPrompt(goal);
+    const prompt = findCoordinatesPrompt(goal, this.config.locale ?? "zh");
     const result = await this.analyze(imageBase64, prompt);
     try {
       const coords = this.extractJson<Coordinates>(result);
@@ -148,7 +142,7 @@ export class VisionModel implements IVisionModel {
     goal: string | TaskDescription,
     recentActions?: RecentAction[],
   ): Promise<ActionPlan> {
-    const prompt = planNextActionPrompt(goal, recentActions);
+    const prompt = planNextActionPrompt(goal, recentActions, this.config.locale ?? "zh");
     const result = await this.analyze(imageBase64, prompt);
     try {
       const plan = this.extractJson<ActionPlan>(result);
@@ -206,13 +200,13 @@ export class VisionModel implements IVisionModel {
     imageBase64: string,
     condition: string,
   ): Promise<boolean> {
-    const prompt = checkConditionPrompt(condition);
+    const prompt = checkConditionPrompt(condition, this.config.locale ?? "zh");
     const result = await this.analyze(imageBase64, prompt);
     return /true/i.test(result);
   }
 
   async query<T>(imageBase64: string, prompt: string): Promise<T> {
-    const fullPrompt = queryPrompt(prompt);
+    const fullPrompt = queryPrompt(prompt, this.config.locale ?? "zh");
     const result = await this.analyze(imageBase64, fullPrompt);
     return this.extractJson<T>(result);
   }

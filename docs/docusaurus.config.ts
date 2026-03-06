@@ -3,8 +3,8 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Genshin Claw',
-  tagline: '原神云游戏智能体 — 自动完成日常任务',
+  title: 'giclaw',
+  tagline: '专为《原神》打造——利用视觉 AI 代理进行云游戏，让您无需亲自操作',
   favicon: 'img/favicon.ico',
 
   future: {
@@ -46,7 +46,11 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'Genshin Claw',
+      title: 'giclaw',
+      logo: {
+        alt: 'giclaw Logo',
+        src: 'img/logo.jpeg',
+      },
       items: [
         {
           type: 'docSidebar',
@@ -87,7 +91,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Genshin Claw. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} giclaw. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -3,8 +3,8 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
 const sidebars: SidebarsConfig = {
   docsSidebar: [
     'getting-started',
-    'installation',
     'configuration',
+    'models',
     'cli',
     'daemon-mode',
     'architecture',
@@ -18,6 +18,7 @@ const sidebars: SidebarsConfig = {
       ],
     },
     'contributing',
+    'faq',
   ],
 };
 

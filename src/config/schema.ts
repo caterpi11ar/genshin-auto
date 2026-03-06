@@ -2,6 +2,8 @@ import { z } from "zod";
 import { PATHS } from "./paths.js";
 
 export const appConfigSchema = z.object({
+  locale: z.enum(["zh", "en"]).default("zh"),
+
   browser: z
     .object({
       startupUrl: z
@@ -40,7 +42,6 @@ export const appConfigSchema = z.object({
       name: z.string().default(""),
       baseUrl: z.string().default(""),
       apiKey: z.string().default(""),
-      family: z.string().default(""),
     })
     .default({}),
 

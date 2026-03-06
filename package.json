@@ -29,7 +29,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "tsc && cp -r src/web/public dist/web/public",
-    "dev": "tsx watch src/cli.ts",
+    "dev": "tsx src/cli.ts",
     "start": "node dist/cli.js",
     "start:daemon": "node dist/cli.js daemon",
     "test": "vitest run",
@@ -46,6 +46,7 @@
     "gray-matter": "^4.0.3",
     "ink": "^4.4.0",
     "node-cron": "^3.0.0",
+    "ora": "^9.3.0",
     "playwright": "^1.52.0",
     "react": "^18.3.0",
     "zod": "^3.25.0"

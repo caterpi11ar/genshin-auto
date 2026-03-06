@@ -8,6 +8,13 @@
   --ifm-color-primary-lightest: #d9b673;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+
+  --gc-gold: #c6923a;
+  --gc-gold-bright: #e8c547;
+  --gc-gold-light: #d9b673;
+  --gc-dark-bg: #1a1a2e;
+  --gc-dark-surface: #16213e;
+  --gc-text-cream: #f5edd6;
 }
 
 [data-theme='dark'] {

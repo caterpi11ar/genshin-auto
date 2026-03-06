@@ -1,9 +1,11 @@
+export type Locale = "zh" | "en";
+
 export interface VisionModelConfig {
   name: string;
   baseUrl: string;
   apiKey: string;
-  family?: string;
   viewport?: { width: number; height: number };
+  locale?: Locale;
 }
 
 export interface Coordinates {

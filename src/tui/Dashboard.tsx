@@ -7,7 +7,7 @@ import type { LogEntry } from "../utils/logger.js";
 import { logger } from "../utils/logger.js";
 import { StatusBar } from "./components/StatusBar.js";
 import { TaskResults } from "./components/TaskResults.js";
-import { LogPanel } from "./components/LogPanel.js";
+import { LogPanel, LOG_VISIBLE_COUNT } from "./components/LogPanel.js";
 
 interface DashboardProps {
   gateway: Gateway;
@@ -87,14 +87,24 @@ export function Dashboard({ gateway }: DashboardProps) {
     }
   }, [snapshot.running, gateway]);
 
+  // Log scroll state: 0 = auto-scroll (bottom), >0 = lines scrolled up from bottom
+  const [logScroll, setLogScroll] = useState(0);
+
   const clearLogs = useCallback(() => {
     setLogs([]);
+    setLogScroll(0);
   }, []);
 
-  useInput((input) => {
-    if (input === "r") handleRunNow();
-    if (input === "c") clearLogs();
-    if (input === "q") {
+  useInput((_input, key) => {
+    if (key.upArrow) {
+      setLogScroll((prev) => Math.min(prev + 1, Math.max(0, logs.length - LOG_VISIBLE_COUNT)));
+    } else if (key.downArrow) {
+      setLogScroll((prev) => Math.max(0, prev - 1));
+    } else if (_input === "r") {
+      handleRunNow();
+    } else if (_input === "c") {
+      clearLogs();
+    } else if (_input === "q") {
       logger.unmute();
       gateway.shutdown().then(() => {
         exit();
@@ -131,12 +141,13 @@ export function Dashboard({ gateway }: DashboardProps) {
         currentReason={snapshot.currentReason}
       />
       <TaskResults lastResult={lastResult} />
-      <LogPanel logs={logs} />
+      <LogPanel logs={logs} scrollOffset={logScroll} />
 
       {/* Key hints */}
       <Box marginTop={1}>
         <Text dimColor>
-          [r] Run Now [c] Clear Logs [q] Quit
+          [↑↓] Scroll Logs [r] Run Now [c] Clear Logs [q] Quit
+          {logScroll > 0 && ` | Scroll: +${logScroll}`}
           {snapshot.queueDepth > 0 && ` | Queue: ${snapshot.queueDepth}`}
         </Text>
       </Box>

@@ -59,11 +59,11 @@ async function fileExists(path: string): Promise<boolean> {
 }
 
 const DEFAULT_CONFIG = {
+  locale: "zh",
   model: {
     name: "",
     baseUrl: "",
     apiKey: "",
-    family: "",
   },
   browser: {},
   tasks: {},

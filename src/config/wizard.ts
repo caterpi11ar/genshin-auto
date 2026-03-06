@@ -45,6 +45,15 @@ export async function runSetupWizard(): Promise<void> {
     console.log("\x1b[2m  Let's configure your vision model.\x1b[0m");
     console.log();
 
+    // 0. Select language
+    const locale = await select({
+      message: "Select language / 选择语言:",
+      choices: [
+        { name: "中文", value: "zh" as const },
+        { name: "English", value: "en" as const },
+      ],
+    });
+
     // 1. Select provider
     const providerChoices = [
       ...PROVIDER_PRESETS.map((p) => ({
@@ -91,21 +100,14 @@ export async function runSetupWizard(): Promise<void> {
       validate: (val: string) => (val ? true : "Model name is required"),
     });
 
-    // 5. Model Family
-    const modelFamily = await input({
-      message: "Model family:",
-      default: preset?.family,
-      validate: (val: string) => (val ? true : "Model family is required"),
-    });
-
-    // 6. Summary & confirm
+    // 5. Summary & confirm
     console.log();
     console.log("\x1b[1mConfiguration summary:\x1b[0m");
+    console.log(`  Language:     ${locale === "zh" ? "中文" : "English"}`);
     console.log(`  Provider:     ${preset?.label ?? "Custom"}`);
     console.log(`  Base URL:     ${baseUrl}`);
     console.log(`  API Key:      ${maskKey(apiKey)}`);
     console.log(`  Model Name:   ${modelName}`);
-    console.log(`  Model Family: ${modelFamily}`);
     console.log();
 
     const ok = await confirm({ message: "Save this configuration?" });
@@ -125,11 +127,11 @@ export async function runSetupWizard(): Promise<void> {
       // File doesn't exist yet, that's fine
     }
 
+    existing["locale"] = locale;
     existing["model"] = {
       name: modelName,
       baseUrl,
       apiKey,
-      family: modelFamily,
     };
 
     await writeFile(PATHS.configPath, JSON.stringify(existing, null, 2) + "\n", "utf-8");

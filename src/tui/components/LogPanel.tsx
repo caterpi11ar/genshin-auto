@@ -1,11 +1,12 @@
 import { Box, Text } from "ink";
 import type { LogEntry } from "../../utils/logger.js";
 
+export const LOG_VISIBLE_COUNT = 15;
+
 interface LogPanelProps {
   logs: LogEntry[];
+  scrollOffset?: number;
 }
-
-const MAX_VISIBLE = 15;
 
 type LogColor = "gray" | "white" | "yellow" | "red";
 
@@ -16,12 +17,27 @@ const levelColors: Record<string, LogColor> = {
   error: "red",
 };
 
-export function LogPanel({ logs }: LogPanelProps) {
-  const visible = logs.slice(-MAX_VISIBLE);
+export function LogPanel({ logs, scrollOffset = 0 }: LogPanelProps) {
+  const total = logs.length;
+  const endIndex = total - scrollOffset;
+  const startIndex = Math.max(0, endIndex - LOG_VISIBLE_COUNT);
+  const visible = logs.slice(startIndex, endIndex);
+
+  const canScrollUp = startIndex > 0;
+  const canScrollDown = scrollOffset > 0;
 
   return (
     <Box flexDirection="column" marginTop={1}>
-      <Text bold>Logs</Text>
+      <Box>
+        <Text bold>Logs</Text>
+        {total > LOG_VISIBLE_COUNT && (
+          <Text dimColor>
+            {" "}({startIndex + 1}-{Math.min(endIndex, total)}/{total})
+            {canScrollUp && " ↑"}
+            {canScrollDown && " ↓"}
+          </Text>
+        )}
+      </Box>
       {visible.length === 0 ? (
         <Text dimColor> No logs</Text>
       ) : (
