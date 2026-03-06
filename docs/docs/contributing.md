@@ -49,7 +49,7 @@ pnpm start
 ## 项目结构
 
 ```
-genshin-impact-claw/
+giclaw/
 ├── src/             # TypeScript 源码
 ├── skills/          # 技能定义（SKILL.md 文件）
 ├── dist/            # 构建产物

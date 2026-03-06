@@ -12,9 +12,9 @@ title: 安装
 ## 全局安装（推荐）
 
 ```bash
-npm install -g genshin-impact-claw@latest
+npm install -g giclaw@latest
 # 或
-pnpm add -g genshin-impact-claw@latest
+pnpm add -g giclaw@latest
 ```
 
 安装后全局可用 `giclaw` 命令。首次运行时自动下载 Chromium，无需手动安装。

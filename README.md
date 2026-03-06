@@ -11,8 +11,8 @@
 运行环境：**Node >= 20**
 
 ```bash
-npm install -g genshin-impact-claw@latest
-# or: pnpm add -g genshin-impact-claw@latest
+npm install -g giclaw@latest
+# or: pnpm add -g giclaw@latest
 ```
 
 安装后全局可用 `giclaw` 命令。首次运行时自动下载 Chromium，无需手动安装。

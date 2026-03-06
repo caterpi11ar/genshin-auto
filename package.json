@@ -1,8 +1,21 @@
 {
-  "name": "genshin-impact-claw",
+  "name": "giclaw",
   "version": "0.2.0",
   "description": "AI agent for Genshin Impact cloud gaming",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caterpi11ar/genshin-impact-claw.git"
+  },
+  "homepage": "https://giclaw.cn",
+  "keywords": [
+    "genshin-impact",
+    "ai-agent",
+    "cloud-gaming",
+    "automation",
+    "playwright"
+  ],
   "engines": {
     "node": ">=20"
   },
@@ -14,6 +27,7 @@
     "skills"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build",
     "build": "tsc && cp -r src/web/public dist/web/public",
     "dev": "tsx watch src/cli.ts",
     "start": "node dist/cli.js",
