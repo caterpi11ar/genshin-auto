@@ -23,7 +23,10 @@ export class TaskRunner extends EventEmitter {
   }
 
   getEnabledTasks(enabledIds: string[]): TaskDefinition[] {
-    return this.tasks.filter((t) => enabledIds.includes(t.id));
+    const taskMap = new Map(this.tasks.map((t) => [t.id, t]));
+    return enabledIds
+      .map((id) => taskMap.get(id))
+      .filter((t): t is TaskDefinition => t != null);
   }
 
   async runAll(

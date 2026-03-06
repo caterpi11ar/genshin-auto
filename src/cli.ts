@@ -7,8 +7,8 @@ import { logger } from "./utils/logger.js";
 const program = new Command();
 
 program
-  .name("genshin-auto")
-  .description("AI vision-driven Genshin Impact cloud gaming automation")
+  .name("genshin-claw")
+  .description("AI agent for Genshin Impact cloud gaming")
   .version("0.2.0")
   .option("-c, --config <path>", "config file path", "./config.json")
   .option("-t, --tasks <ids...>", "task IDs to run")
@@ -57,6 +57,7 @@ async function runOnce(opts: Record<string, unknown>): Promise<void> {
   }
 
   const gateway = new Gateway(config);
+  await gateway.init();
   const taskIds = opts["tasks"] as string[] | undefined;
 
   try {

@@ -92,7 +92,7 @@ export class VisionModel implements IVisionModel {
                 ],
               },
             ],
-            max_tokens: 1024,
+            max_tokens: 4096,
           }),
           signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         });
@@ -135,9 +135,7 @@ export class VisionModel implements IVisionModel {
     const prompt = findCoordinatesPrompt(goal);
     const result = await this.analyze(imageBase64, prompt);
     try {
-      const match = result.match(/\{[^}]*\}/);
-      if (!match) return null;
-      const coords = JSON.parse(match[0]) as Coordinates;
+      const coords = this.extractJson<Coordinates>(result);
       if (coords.x < 0 || coords.y < 0) return null;
       return this.toPixel(coords.x, coords.y);
     } catch {
@@ -153,11 +151,7 @@ export class VisionModel implements IVisionModel {
     const prompt = planNextActionPrompt(goal, recentActions);
     const result = await this.analyze(imageBase64, prompt);
     try {
-      const match = result.match(/\{[^}]*\}/);
-      if (!match) {
-        throw new Error(`No JSON found in response: ${result}`);
-      }
-      const plan = JSON.parse(match[0]) as ActionPlan;
+      const plan = this.extractJson<ActionPlan>(result);
       if (plan.action === "click" && plan.x != null && plan.y != null) {
         const px = this.toPixel(plan.x, plan.y);
         plan.x = px.x;
@@ -165,12 +159,47 @@ export class VisionModel implements IVisionModel {
       }
       return plan;
     } catch (err) {
-      logger.warn(`Failed to parse action plan: ${result}`);
+      logger.warn(`Failed to parse action plan: ${result.slice(0, 120)}`);
       return {
         action: "wait",
         reason: "Failed to parse AI response, retrying",
       };
     }
+  }
+
+  /**
+   * Extract a JSON object from model output.
+   * Handles: markdown fences, multi-line responses, truncated JSON.
+   */
+  private extractJson<T>(raw: string): T {
+    // Strip markdown code fences
+    let text = raw.replace(/```(?:json)?\s*/g, "").replace(/```/g, "").trim();
+
+    // Try full match (first { to last })
+    const fullMatch = text.match(/\{[\s\S]*\}/);
+    if (fullMatch) {
+      try {
+        return JSON.parse(fullMatch[0]) as T;
+      } catch {
+        // Fall through to repair
+      }
+    }
+
+    // Try to repair truncated JSON (missing closing "} )
+    const braceIdx = text.indexOf("{");
+    if (braceIdx >= 0) {
+      let fragment = text.slice(braceIdx);
+      // Append closing quote + brace if truncated mid-string
+      for (const suffix of ["}", '"}', '""}']) {
+        try {
+          return JSON.parse(fragment + suffix) as T;
+        } catch {
+          // Try next suffix
+        }
+      }
+    }
+
+    throw new Error(`No valid JSON found in: ${raw.slice(0, 120)}`);
   }
 
   async checkCondition(
@@ -185,10 +214,6 @@ export class VisionModel implements IVisionModel {
   async query<T>(imageBase64: string, prompt: string): Promise<T> {
     const fullPrompt = queryPrompt(prompt);
     const result = await this.analyze(imageBase64, fullPrompt);
-    const match = result.match(/\{[\s\S]*\}/);
-    if (!match) {
-      throw new Error(`Failed to parse AI response as JSON: ${result}`);
-    }
-    return JSON.parse(match[0]) as T;
+    return this.extractJson<T>(result);
   }
 }

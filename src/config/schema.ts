@@ -45,7 +45,13 @@ export const appConfigSchema = z.object({
 
   tasks: z
     .object({
-      enabled: z.array(z.string()).default(["welkin-moon"]),
+      enabled: z.array(z.string()).default([
+        "welkin-moon",
+        "claim-mail",
+        "expedition-collect",
+        "battle-pass-claim",
+      ]),
+      skillsDirs: z.array(z.string()).default(["./skills"]),
     })
     .default({}),
 

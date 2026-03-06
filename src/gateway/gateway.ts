@@ -6,7 +6,7 @@ import { GatewayState } from "./state.js";
 import { Scheduler } from "./scheduler.js";
 import { TaskQueue } from "../queue/task-queue.js";
 import { TaskRunner, type RunResult } from "../tasks/task-runner.js";
-import { allTasks } from "../tasks/index.js";
+import { SkillRegistry } from "../skills/registry.js";
 import { SessionManager } from "../browser/session-manager.js";
 import { loginFlow } from "../browser/login.js";
 import { VisionModel } from "../model/vision-model.js";
@@ -20,6 +20,7 @@ export class Gateway implements IGateway {
 
   private queue: TaskQueue;
   private taskRunner: TaskRunner;
+  private skillRegistry: SkillRegistry;
   private scheduler: Scheduler | null = null;
   private stateStore: StateStore;
 
@@ -28,7 +29,7 @@ export class Gateway implements IGateway {
     this.state = new GatewayState();
     this.queue = new TaskQueue();
     this.taskRunner = new TaskRunner();
-    this.taskRunner.registerAll(allTasks);
+    this.skillRegistry = new SkillRegistry();
     this.stateStore = new StateStore();
 
     // Forward task runner events to gateway state
@@ -49,6 +50,30 @@ export class Gateway implements IGateway {
     this.queue.on("error", () => {
       this.state.update({ queueDepth: this.queue.getDepth() });
     });
+  }
+
+  async init(): Promise<void> {
+    await this.skillRegistry.loadFromDirs(this.config.tasks.skillsDirs);
+    this.taskRunner.registerAll(this.skillRegistry.toTaskDefinitions());
+    logger.info(
+      `Loaded ${this.skillRegistry.getAll().length} skill(s) from ${this.config.tasks.skillsDirs.join(", ")}`,
+    );
+  }
+
+  getSkillSummaries(): {
+    id: string;
+    name: string;
+    description: string;
+    enabled: boolean;
+    timeoutMs: number;
+  }[] {
+    return this.skillRegistry.getAll().map((s) => ({
+      id: s.id,
+      name: s.name,
+      description: s.description,
+      enabled: this.config.tasks.enabled.includes(s.id),
+      timeoutMs: s.timeoutMs,
+    }));
   }
 
   getSnapshot(): GatewaySnapshot {

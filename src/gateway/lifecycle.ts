@@ -7,6 +7,7 @@ import { logger } from "../utils/logger.js";
  */
 export async function startGateway(config: AppConfig): Promise<Gateway> {
   const gateway = new Gateway(config);
+  await gateway.init();
 
   // Start web server if enabled
   if (config.web.enabled) {

@@ -1,6 +1,5 @@
 import type { FastifyInstance } from "fastify";
 import type { Gateway } from "../gateway/gateway.js";
-import { allTasks } from "../tasks/index.js";
 
 export function registerApi(app: FastifyInstance, gateway: Gateway): void {
   const config = gateway.config;
@@ -27,13 +26,7 @@ export function registerApi(app: FastifyInstance, gateway: Gateway): void {
 
   // GET /api/tasks
   app.get("/api/tasks", async () => {
-    return allTasks.map((t) => ({
-      id: t.id,
-      name: t.name,
-      description: t.description,
-      enabled: config.tasks.enabled.includes(t.id),
-      timeoutMs: t.timeoutMs,
-    }));
+    return gateway.getSkillSummaries();
   });
 
   // GET /api/config
