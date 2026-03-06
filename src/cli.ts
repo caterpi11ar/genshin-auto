@@ -95,10 +95,6 @@ async function checkModelConfig(): Promise<boolean> {
 }
 
 async function runOnce(opts: Record<string, unknown>): Promise<void> {
-  if (opts["verbose"]) {
-    logger.setLevel("debug");
-  }
-
   // Config check — prompt setup wizard if not configured
   if (!(await checkModelConfig())) {
     const isTTY = process.stdin.isTTY && process.stdout.isTTY;
@@ -130,6 +126,11 @@ async function runOnce(opts: Record<string, unknown>): Promise<void> {
     configPath: opts["config"] as string | undefined,
     cliOverrides,
   });
+
+  logger.setLevel(config.logLevel);
+  if (opts["verbose"]) {
+    logger.setLevel("debug");
+  }
 
   if (opts["dryRun"]) {
     logger.info("Dry run — config validated successfully:");
@@ -211,10 +212,6 @@ async function runDaemon(
   opts: Record<string, unknown>,
   daemonOpts: Record<string, unknown>,
 ): Promise<void> {
-  if (opts["verbose"]) {
-    logger.setLevel("debug");
-  }
-
   // Config check — daemon mode cannot run interactive wizard
   if (!(await checkModelConfig())) {
     logger.error(
@@ -236,6 +233,11 @@ async function runDaemon(
     configPath: opts["config"] as string | undefined,
     cliOverrides,
   });
+
+  logger.setLevel(config.logLevel);
+  if (opts["verbose"]) {
+    logger.setLevel("debug");
+  }
 
   await startGateway(config);
 }

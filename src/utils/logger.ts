@@ -47,9 +47,7 @@ class Logger extends EventEmitter {
 
   constructor() {
     super();
-    const envLevel = process.env["LOG_LEVEL"]?.toLowerCase();
-    this.level =
-      envLevel && envLevel in LEVELS ? (envLevel as LogLevel) : "info";
+    this.level = "info";
   }
 
   setLevel(level: LogLevel): void {

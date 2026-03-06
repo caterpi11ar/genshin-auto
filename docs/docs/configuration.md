@@ -7,7 +7,7 @@ title: 配置
 
 推荐通过 `giclaw init` 交互式引导完成模型配置。也可以手动编辑配置文件。
 
-三层覆盖优先级：`config.json` &lt; 环境变量 &lt; CLI 参数。
+两层覆盖优先级：`config.json` < CLI 参数。
 
 ## config.json
 
@@ -24,26 +24,12 @@ title: 配置
     "skillsDirs": ["./skills"]
   },
   "schedule": { "cron": "0 6 * * *", "timezone": "Asia/Shanghai" },
-  "browser": { "headless": true }
+  "browser": { "headless": true },
+  "logLevel": "info"
 }
 ```
 
-## 环境变量
-
-模型也可通过环境变量配置。支持任意 OpenAI 兼容视觉模型：Gemini、Qwen-VL、豆包 Seed 等。
-
-```bash
-# Vision model configuration
-MIDSCENE_MODEL_NAME=gemini-2.5-flash
-MIDSCENE_MODEL_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
-MIDSCENE_MODEL_API_KEY=your-api-key-here
-MIDSCENE_MODEL_FAMILY=gemini
-
-# Browser (optional)
-# BROWSER_HEADLESS=true
-```
-
-可以将以上变量写入 `~/.giclaw/.env` 文件（`giclaw init` 自动生成），或项目根目录的 `.env` 文件，程序启动时自动加载。
+所有配置统一在 `~/.giclaw/config.json` 中管理。`giclaw init` 交互式引导会自动写入该文件。也可以在项目根目录放置 `config.json`，程序启动时优先加载。
 
 ## 配置项说明
 
@@ -58,3 +44,4 @@ MIDSCENE_MODEL_FAMILY=gemini
 | `schedule.cron` | Cron 表达式 | `"0 6 * * *"` |
 | `schedule.timezone` | 时区 | `"Asia/Shanghai"` |
 | `browser.headless` | 是否无头模式 | `true` |
+| `logLevel` | 日志级别（`debug`、`info`、`warn`、`error`） | `"info"` |

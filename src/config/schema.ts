@@ -82,6 +82,8 @@ export const appConfigSchema = z.object({
       maxDepth: z.number().default(10),
     })
     .default({}),
+
+  logLevel: z.enum(["debug", "info", "warn", "error"]).default("info"),
 });
 
 export type AppConfig = z.infer<typeof appConfigSchema>;

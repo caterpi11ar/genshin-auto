@@ -4,7 +4,7 @@
 
 通过视觉模型分析游戏截图，自动完成云原神的日常任务——登录、领取月卡、收取邮件、探索派遣、纪行奖励。无需选择器、无需坐标硬编码。截图发给 AI，AI 决定下一步操作。
 
-[技能列表](skills/README.md) · [配置参考](.env.example) · [官网](https://giclaw.cn)
+[技能列表](skills/README.md) · [配置参考](#configuration) · [官网](https://giclaw.cn)
 
 ## Install（推荐）
 
@@ -33,7 +33,7 @@ giclaw run
 giclaw run --dry-run
 ```
 
-`giclaw init` 会引导你选择模型提供商（Gemini、OpenAI、豆包、通义千问等）并配置 API key，配置保存到 `~/.giclaw/.env`。如果跳过 init 直接运行，程序会自动触发引导。
+`giclaw init` 会引导你选择模型提供商（Gemini、OpenAI、豆包、通义千问等）并配置 API key，配置保存到 `~/.giclaw/config.json`。如果跳过 init 直接运行，程序会自动触发引导。
 
 首次需要手动登录米哈游账号，登录后 cookie 自动保存到 `cookies.json`，后续运行自动复用。
 
@@ -73,7 +73,7 @@ giclaw daemon --no-web
 
 ## Configuration
 
-三层覆盖：`config.json` < 环境变量 < CLI 参数。
+两层覆盖：`config.json` < CLI 参数。
 
 ```json
 {
@@ -88,11 +88,12 @@ giclaw daemon --no-web
     "skillsDirs": ["./skills"]
   },
   "schedule": { "cron": "0 6 * * *", "timezone": "Asia/Shanghai" },
-  "browser": { "headless": true }
+  "browser": { "headless": true },
+  "logLevel": "info"
 }
 ```
 
-模型也可通过环境变量配置（见 [`.env.example`](.env.example)）。支持任意 OpenAI 兼容视觉模型：Gemini、Qwen-VL、豆包 Seed 等。
+所有配置统一在 `config.json` 中管理。支持任意 OpenAI 兼容视觉模型：Gemini、Qwen-VL、豆包 Seed 等。
 
 ## Skills
 

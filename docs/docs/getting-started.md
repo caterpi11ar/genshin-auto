@@ -25,14 +25,14 @@ giclaw run --no-headless
 giclaw run
 ```
 
-`giclaw init` 会引导你选择模型提供商（Gemini、OpenAI、豆包、通义千问等）并配置 API key，配置保存到 `~/.giclaw/.env`。
+`giclaw init` 会引导你选择模型提供商（Gemini、OpenAI、豆包、通义千问等）并配置 API key，配置保存到 `~/.giclaw/config.json`。
 
 如果跳过 init 直接运行，程序会自动检测未配置状态并触发引导。
 
 首次需要手动登录米哈游账号，登录后 cookie 自动保存到 `cookies.json`，后续运行自动复用。
 
 :::tip
-在 CI 或非交互环境中，可以使用 `giclaw init --non-interactive` 创建默认配置文件，然后手动编辑 `~/.giclaw/.env` 填入 API key。
+在 CI 或非交互环境中，可以使用 `giclaw init --non-interactive` 创建默认配置文件，然后手动编辑 `~/.giclaw/config.json` 填入模型配置。
 :::
 
 ## 验证配置

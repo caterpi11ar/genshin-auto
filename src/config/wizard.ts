@@ -1,5 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { PATHS, ensureStateDir, initStateDir, readEnvFile } from "./paths.js";
+import { PATHS, ensureStateDir } from "./paths.js";
 import {
   PROVIDER_PRESETS,
   CUSTOM_PROVIDER_VALUE,
@@ -9,14 +9,22 @@ import {
 const PLACEHOLDER_KEYS = ["your-api-key-here", "sk-xxx", ""];
 
 export async function isModelConfigured(): Promise<boolean> {
-  const env = await readEnvFile();
-  const apiKey = env["MIDSCENE_MODEL_API_KEY"] ?? "";
-  const baseUrl = env["MIDSCENE_MODEL_BASE_URL"] ?? "";
-  const modelName = env["MIDSCENE_MODEL_NAME"] ?? "";
+  try {
+    const raw = await readFile(PATHS.configPath, "utf-8");
+    const config = JSON.parse(raw) as Record<string, unknown>;
+    const model = config["model"] as Record<string, unknown> | undefined;
+    if (!model) return false;
 
-  if (!apiKey || PLACEHOLDER_KEYS.includes(apiKey)) return false;
-  if (!baseUrl || !modelName) return false;
-  return true;
+    const apiKey = (model["apiKey"] as string) ?? "";
+    const baseUrl = (model["baseUrl"] as string) ?? "";
+    const name = (model["name"] as string) ?? "";
+
+    if (!apiKey || PLACEHOLDER_KEYS.includes(apiKey)) return false;
+    if (!baseUrl || !name) return false;
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function maskKey(key: string): string {
@@ -106,66 +114,29 @@ export async function runSetupWizard(): Promise<void> {
       return;
     }
 
-    // 7. Write .env — preserve non-model variables
+    // 7. Write config.json — deep merge to preserve other settings
     await ensureStateDir();
 
-    const MODEL_KEYS = new Set([
-      "MIDSCENE_MODEL_NAME",
-      "MIDSCENE_MODEL_BASE_URL",
-      "MIDSCENE_MODEL_API_KEY",
-      "MIDSCENE_MODEL_FAMILY",
-    ]);
-
-    let existingLines: string[] = [];
+    let existing: Record<string, unknown> = {};
     try {
-      const raw = await readFile(PATHS.envPath, "utf-8");
-      existingLines = raw.split("\n");
+      const raw = await readFile(PATHS.configPath, "utf-8");
+      existing = JSON.parse(raw) as Record<string, unknown>;
     } catch {
       // File doesn't exist yet, that's fine
     }
 
-    // Keep lines that are not model-related key=value pairs
-    const preserved = existingLines.filter((line) => {
-      const trimmed = line.trim();
-      // Keep comments and blank lines that are not in the model section header
-      if (!trimmed || trimmed.startsWith("#")) return true;
-      const eqIdx = trimmed.indexOf("=");
-      if (eqIdx === -1) return true;
-      const key = trimmed.slice(0, eqIdx).trim();
-      return !MODEL_KEYS.has(key);
-    });
+    existing["model"] = {
+      name: modelName,
+      baseUrl,
+      apiKey,
+      family: modelFamily,
+    };
 
-    // Remove the "# Vision model configuration" header if present since we'll re-add it
-    const filteredPreserved = preserved.filter(
-      (line) => line.trim() !== "# Vision model configuration",
-    );
+    await writeFile(PATHS.configPath, JSON.stringify(existing, null, 2) + "\n", "utf-8");
 
-    // Build new model block
-    const modelBlock = [
-      "# Vision model configuration",
-      `MIDSCENE_MODEL_NAME=${modelName}`,
-      `MIDSCENE_MODEL_BASE_URL=${baseUrl}`,
-      `MIDSCENE_MODEL_API_KEY=${apiKey}`,
-      `MIDSCENE_MODEL_FAMILY=${modelFamily}`,
-    ];
-
-    // Combine: model block first, then preserved lines
-    const finalLines = [...modelBlock, "", ...filteredPreserved];
-
-    // Trim trailing blank lines and ensure single trailing newline
-    while (finalLines.length > 0 && finalLines[finalLines.length - 1]!.trim() === "") {
-      finalLines.pop();
-    }
-    const envContent = finalLines.join("\n") + "\n";
-
-    await writeFile(PATHS.envPath, envContent, "utf-8");
-
-    // 8. Ensure config.json exists
-    await initStateDir();
-
-    // 9. Success message
+    // 8. Success message
     console.log();
-    console.log("\x1b[32mConfiguration saved to " + PATHS.envPath + "\x1b[0m");
+    console.log("\x1b[32mConfiguration saved to " + PATHS.configPath + "\x1b[0m");
     console.log();
     console.log("Next steps:");
     console.log("  giclaw run --dry-run   Validate configuration");
